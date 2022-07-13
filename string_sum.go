@@ -2,6 +2,10 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -23,5 +27,25 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	trimmed := strings.ReplaceAll(input, " ", "")
+	if len(trimmed) == 0 {
+		return "", fmt.Errorf("Sum error: %q", errorEmptyInput)
+	}
+	zp := regexp.MustCompile(`[+,-]\d+`)
+
+	res := 0
+	expressions := zp.FindAllString(trimmed, -1)
+	if len(expressions) != 2 {
+		return "", fmt.Errorf("Sum error: %q", errorNotTwoOperands)
+	}
+	for _, expr := range zp.FindAllString(trimmed, -1) {
+		num, _ := strconv.Atoi(expr)
+		res += num
+	}
+
+	return strconv.Itoa(res), nil
+}
+
+func main() {
+	StringSum(" -1 + 5")
 }

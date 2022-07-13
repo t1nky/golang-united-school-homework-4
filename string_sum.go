@@ -26,22 +26,24 @@ var (
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
+const ErrorPrefix = "sum error: %q"
+
 func StringSum(input string) (output string, err error) {
 	trimmed := strings.ReplaceAll(input, " ", "")
 	if len(trimmed) == 0 {
-		return "", fmt.Errorf("sum error: %q", errorEmptyInput)
+		return "", fmt.Errorf(ErrorPrefix, errorEmptyInput)
 	}
-	zp := regexp.MustCompile(`[+,-].+`)
+	zp := regexp.MustCompile(`[+,-]?[\w\s]+`)
 
 	res := 0
 	expressions := zp.FindAllString(trimmed, -1)
 	if len(expressions) != 2 {
-		return "", fmt.Errorf("sum error: %q", errorNotTwoOperands)
+		return "", fmt.Errorf(ErrorPrefix, errorNotTwoOperands)
 	}
 	for _, expr := range zp.FindAllString(trimmed, -1) {
 		num, err := strconv.Atoi(expr)
 		if err != nil {
-			return "", fmt.Errorf("sum error: %q", err)
+			return "", fmt.Errorf(ErrorPrefix, err)
 		}
 		res += num
 	}

@@ -29,23 +29,22 @@ var (
 func StringSum(input string) (output string, err error) {
 	trimmed := strings.ReplaceAll(input, " ", "")
 	if len(trimmed) == 0 {
-		return "", fmt.Errorf("Sum error: %q", errorEmptyInput)
+		return "", fmt.Errorf("sum error: %q", errorEmptyInput)
 	}
-	zp := regexp.MustCompile(`[+,-]\d+`)
+	zp := regexp.MustCompile(`[+,-].+`)
 
 	res := 0
 	expressions := zp.FindAllString(trimmed, -1)
 	if len(expressions) != 2 {
-		return "", fmt.Errorf("Sum error: %q", errorNotTwoOperands)
+		return "", fmt.Errorf("sum error: %q", errorNotTwoOperands)
 	}
 	for _, expr := range zp.FindAllString(trimmed, -1) {
-		num, _ := strconv.Atoi(expr)
+		num, err := strconv.Atoi(expr)
+		if err != nil {
+			return "", fmt.Errorf("sum error: %q", err)
+		}
 		res += num
 	}
 
 	return strconv.Itoa(res), nil
-}
-
-func main() {
-	StringSum(" -1 + 5")
 }

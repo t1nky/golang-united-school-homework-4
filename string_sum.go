@@ -2,6 +2,7 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,6 +14,7 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
+	errorSum            = "sum error %w"
 )
 
 // Implement a function that computes the sum of two int numbers written as a string
@@ -28,19 +30,19 @@ var (
 func StringSum(input string) (output string, err error) {
 	trimmed := strings.ReplaceAll(input, " ", "")
 	if len(trimmed) == 0 {
-		return "", errorEmptyInput
+		return "", fmt.Errorf(errorSum, errorEmptyInput)
 	}
 	zp := regexp.MustCompile(`[+,-]?[\w\s]+`)
 
 	res := 0
 	expressions := zp.FindAllString(trimmed, -1)
 	if len(expressions) != 2 {
-		return "", errorNotTwoOperands
+		return "", fmt.Errorf(errorSum, errorNotTwoOperands)
 	}
 	for _, expr := range zp.FindAllString(trimmed, -1) {
 		num, err := strconv.Atoi(expr)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf(errorSum, err)
 		}
 		res += num
 	}

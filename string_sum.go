@@ -2,7 +2,6 @@ package string_sum
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -29,19 +28,19 @@ var (
 func StringSum(input string) (output string, err error) {
 	trimmed := strings.ReplaceAll(input, " ", "")
 	if len(trimmed) == 0 {
-		return "", fmt.Errorf(errorEmptyInput.Error())
+		return "", errorEmptyInput
 	}
 	zp := regexp.MustCompile(`[+,-]?[\w\s]+`)
 
 	res := 0
 	expressions := zp.FindAllString(trimmed, -1)
 	if len(expressions) != 2 {
-		return "", fmt.Errorf(errorNotTwoOperands.Error())
+		return "", errorNotTwoOperands
 	}
 	for _, expr := range zp.FindAllString(trimmed, -1) {
 		num, err := strconv.Atoi(expr)
 		if err != nil {
-			return "", fmt.Errorf(err.Error())
+			return "", err
 		}
 		res += num
 	}
